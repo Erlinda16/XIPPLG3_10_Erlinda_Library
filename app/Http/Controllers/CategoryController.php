@@ -1,33 +1,36 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use App\Models\Categories;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
-        public function index()
+    public function index()
     {
-    $categories = Categories::all();
+        $category = Category::all();
 
-    return response()->json([
+        return response()->json([
             'status' => 200,
             'message' => 'Categories retrieved successfully.',
-            'data' => $categories
-    ], 200);
+            'data' => $category
+        ], 200);
     }
 
     public function store(Request $request)
     {
-    $request->validate(['name' => 'required|string|max:255']);
+        $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
 
-    $request = Category::create($request->all());
+        $category = Category::create($request->all());
 
-    return response()->json([
+        return response()->json([
             'status' => 201,
             'message' => 'Categories retrieved successfully.',
-            'data' => $categories
-    ], 201);
+            'data' => $category
+        ], 201);
     }
 
     public function show($id)
@@ -73,7 +76,7 @@ class CategoryController extends Controller
 
     public function destroy($id)
     {
-            $category = Category::find($id);
+        $category = Category::find($id);
 
             if (!$category) {
                 return response()->json([
