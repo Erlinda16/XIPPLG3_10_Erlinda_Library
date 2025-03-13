@@ -4,28 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+return new class extends Migration {
+    public function up()
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
-            $table->string('book_id');
-            $table->foreignId('user_id');  
+            $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
+            $table->foreignId('user1_id')->constrained('user1s')->onDelete('cascade');
             $table->date('loans_date');
-            $table->date('return_date');
-            $table->string('status');
+            $table->date('return_date')->nullable();
+            $table->enum('status', ['borrowed', 'returned'])->default('borrowed');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('loans');
     }

@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Review;
+use Illuminate\Http\Request;
+
+class ReviewController extends Controller
+{
+    public function index()
+    {
+        $reviews = Review::all();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Reviews retrieved successfully.',
+            'data' => $reviews
+        ], 200);
+    }
+
+    public function store(Request $request)
+    {
+        $review = Review::create($request->all());
+
+        try {
+            return response()->json([
+                'status' => 201,
+                'message' => 'Review retrieved successfully.',
+                'data' => $review
+        ], 201);
+    } catch (\Exception $e) {
+        Log::error('Error storing API data: ' . $e->getMessage());
+        return response()->json(['error' => 'Internal Server Error'], 500);
+    }
+}
+
+    public function show($id)
+    {
+            $review = Reviews::find($id);
+
+            if (!$review) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Review not found.',
+                    'data' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Review retrieved successfully.',
+            'data' => $review
+        ], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $review = Review::find($id);
+
+        if (!$review) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Review not found.',
+                    'data' => null
+                ], 404);
+            }
+
+        $review->update($request->all());
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Review updated successfully.',
+            'data' => $review
+        ], 200);
+    }
+
+    public function destroy($id)
+    {
+        $review = Review::find($id);
+
+            if (!$review) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Review not found.',
+                    'data' => $review
+            ], 404);
+        }
+
+        $review->delete();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Review deleted successfully.',
+            'data' => null
+        ], 200);
+    }
+}
